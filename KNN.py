@@ -25,12 +25,18 @@ def getTrainAndTest(features, output) :
     return X_train, X_test, Y_train, Y_test
 
 
-def find_distances(X_train, data) :
+def find_distances(X_train, data, metric) :
     distances = []
-    for index, train_instance in X_train.iterrows():
-        distance = np.sqrt(np.sum((train_instance - data) ** 2))
-        #print(f'index: {index}\ntrain_instance: {train_instance}\n\n\n\n')
-        distances.append((distance, index))
+    if metric == 'manhattan' :
+        for index, train_instance in X_train.iterrows():
+            distance = np.diff(train_instance - data)
+            #print(f'index: {index}\ntrain_instance: {train_instance}\n\n\n\n')
+            distances.append((distance, index))
+    else :
+        for index, train_instance in X_train.iterrows():
+            distance = np.sqrt(np.sum((train_instance - data) ** 2))
+            #print(f'index: {index}\ntrain_instance: {train_instance}\n\n\n\n')
+            distances.append((distance, index))
     return distances
 
 
@@ -79,34 +85,9 @@ print(accuracy)
 
 correct = 0
 for index, data in X_test.iterrows() :
-    distances = find_distances(X_train, data)
+    distances = find_distances(X_train, data, "euclidean")
     output = predict(3, distances, Y_train)
     #print(f'Predicted output: {output}  Expected output: {Y_test.loc[index]}')
     if output == Y_test.loc[index]:
         correct+=1
 print(correct/len(X_test))
-
-    
-    
-    
-
-
-
-
-    
-
-    
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
